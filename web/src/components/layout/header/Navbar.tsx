@@ -1,4 +1,4 @@
-import { ChevronDownIcon, GitHubLogoIcon } from '@radix-ui/react-icons';
+import { ChevronDownIcon, GitHubLogoIcon, LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { clsx } from 'clsx';
 import NextLink from 'next/link';
@@ -32,15 +32,15 @@ export function NavbarTitle() {
   return (
     <div className="flex h-8 items-center justify-start gap-4">
       <NextLink href="/" passHref className="relative h-8 w-8" aria-label="Home page">
-        <div className="absolute size-8 rounded-full bg-white" />
-      </NextLink>
+  <img src="/captn-in-app.jpeg" alt="Home" className="absolute h-8 w-8 rounded-full" />
+</NextLink>
       <NextLink
         href="/"
         passHref
         className="font-robotoMono text-center text-xl font-medium text-white no-underline"
         aria-label="build-onchain-apps Github repository"
       >
-        BUILD ONCHAIN APPS
+        captn's shipyard
       </NextLink>
     </div>
   );
@@ -59,16 +59,40 @@ function Navbar() {
         <div className="flex items-center justify-start gap-8">
           <ul className="hidden items-center justify-start gap-8 md:flex">
             <li className="flex">
-              <NavbarLink href="https://github.com/coinbase/build-onchain-apps" target="_blank">
+              <NavbarLink href="https://github.com/captnseagraves" target="_blank">
                 <GitHubLogoIcon
                   width="24"
                   height="24"
-                  aria-label="build-onchain-apps Github respository"
+                  aria-label="captn's github"
                 />
               </NavbarLink>
             </li>
             <li className="flex">
-              <NavbarLink href="/#get-started">Get Started</NavbarLink>
+              <NavbarLink href="https://linkedin.com/in/kevinseagraves" target="_blank">
+                <LinkedInLogoIcon
+                  width="24"
+                  height="24"
+                  aria-label="captn's linkedin"
+                />
+              </NavbarLink>
+            </li>
+            <li className="flex">
+              <NavbarLink href="https://twitter.com/captnseagraves" target="_blank">
+                <TwitterLogoIcon
+                  width="24"
+                  height="24"
+                  aria-label="captn's twitter"
+                />
+              </NavbarLink>
+            </li>
+            <li className="flex">
+              <NavbarLink href="/#get-started">Buy My Time</NavbarLink>
+            </li>
+            <li className="flex">
+              <NavbarLink href="/#get-started">Current Investment Thesis</NavbarLink>
+            </li>
+            <li className="flex">
+              <NavbarLink href="/#get-started">Personal Manifesto</NavbarLink>
             </li>
             <li className="flex">
               <NavigationMenu.Root className="relative">
