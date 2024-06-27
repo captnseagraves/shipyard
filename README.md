@@ -1,4 +1,4 @@
-# Build Onchain Apps Template
+#captn's shipyard
 
 This project has two main folders:
 

@@ -1,4 +1,4 @@
-# Build Onchain Apps Template experiences
+# captn's shipyard
 
 ## Getting Started
 

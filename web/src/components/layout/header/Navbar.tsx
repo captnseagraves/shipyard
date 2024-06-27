@@ -92,7 +92,7 @@ function Navbar() {
               <NavbarLink href="/#get-started">Current Investment Thesis</NavbarLink>
             </li>
             <li className="flex">
-              <NavbarLink href="/#get-started">Buy My Time</NavbarLink>
+              <NavbarLink href="/buy-my-time">Buy My Time</NavbarLink>
             </li>
             <li className="flex">
               <NavigationMenu.Root className="relative">

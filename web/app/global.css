@@ -13,7 +13,7 @@
   --palette-bg-soft-black: #141519;
   --palette-bg-white: #fff;
 
-  /* Build Onchain Apps shared variables */
+  /* captn's shipyard shared variables */
   --boat-color-background: var(--palette-bg-black);
   --boat-color-text: var(--palette-bg-white);
 

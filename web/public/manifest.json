@@ -1,19 +1,19 @@
 {
-  "name": "Build Onchain Apps",
-  "short_name": "Onchain App",
+  "name": "captn's shipyard",
+  "short_name": "captn's shipyard",
   "icons": [
     {
-      "src": "/icons/16x16.png",
+      "src": "/captn-in-app.jpeg",
       "sizes": "16x16",
       "type": "image/png"
     },
     {
-      "src": "/icons/48x48.png",
+      "src": "/captn-in-app.jpeg",
       "sizes": "48x48",
       "type": "image/png"
     },
     {
-      "src": "/icons/96x96.png",
+      "src": "/captn-in-app.jpeg",
       "sizes": "96x96",
       "type": "image/png"
     }
