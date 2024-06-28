@@ -1,4 +1,9 @@
-import { ChevronDownIcon, GitHubLogoIcon, LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
+import {
+  ChevronDownIcon,
+  GitHubLogoIcon,
+  LinkedInLogoIcon,
+  TwitterLogoIcon,
+} from '@radix-ui/react-icons';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { clsx } from 'clsx';
 import NextLink from 'next/link';
@@ -32,8 +37,8 @@ export function NavbarTitle() {
   return (
     <div className="flex h-8 items-center justify-start gap-4">
       <NextLink href="/" passHref className="relative h-8 w-8" aria-label="Home page">
-  <img src="/captn-in-app.jpeg" alt="Home" className="absolute h-8 w-8 rounded-full" />
-</NextLink>
+        <img src="/captn-in-app.jpeg" alt="Home" className="absolute h-8 w-8 rounded-full" />
+      </NextLink>
       <NextLink
         href="/"
         passHref
@@ -60,29 +65,17 @@ function Navbar() {
           <ul className="hidden items-center justify-start gap-8 md:flex">
             <li className="flex">
               <NavbarLink href="https://github.com/captnseagraves" target="_blank">
-                <GitHubLogoIcon
-                  width="24"
-                  height="24"
-                  aria-label="captn's github"
-                />
+                <GitHubLogoIcon width="24" height="24" aria-label="captn's github" />
               </NavbarLink>
             </li>
             <li className="flex">
               <NavbarLink href="https://linkedin.com/in/kevinseagraves" target="_blank">
-                <LinkedInLogoIcon
-                  width="24"
-                  height="24"
-                  aria-label="captn's linkedin"
-                />
+                <LinkedInLogoIcon width="24" height="24" aria-label="captn's linkedin" />
               </NavbarLink>
             </li>
             <li className="flex">
               <NavbarLink href="https://twitter.com/captnseagraves" target="_blank">
-                <TwitterLogoIcon
-                  width="24"
-                  height="24"
-                  aria-label="captn's twitter"
-                />
+                <TwitterLogoIcon width="24" height="24" aria-label="captn's twitter" />
               </NavbarLink>
             </li>
             <li className="flex">

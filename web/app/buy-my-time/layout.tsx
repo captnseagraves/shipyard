@@ -2,8 +2,7 @@ import { generateMetadata } from '@/utils/generateMetadata';
 
 export const metadata = generateMetadata({
   title: 'Buy My Time',
-  description:
-    'Buy an NFT and redeem for a slot on captn\'s calendar',
+  description: "Buy an NFT and redeem for a slot on captn's calendar",
   images: 'themes.png',
   pathname: 'buy-my-time',
 });

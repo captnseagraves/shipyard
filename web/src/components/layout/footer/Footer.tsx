@@ -1,6 +1,11 @@
 'use client';
 
-import { GitHubLogoIcon, ArrowTopRightIcon, LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
+import {
+  GitHubLogoIcon,
+  ArrowTopRightIcon,
+  LinkedInLogoIcon,
+  TwitterLogoIcon,
+} from '@radix-ui/react-icons';
 import NextLink from 'next/link';
 import { NavbarLink } from '@/components/layout/header/Navbar';
 import FooterIcon from './FooterIcon';
@@ -12,9 +17,13 @@ export default function Footer() {
         <div className="container mx-auto flex w-full flex-col justify-between gap-16 px-8 md:flex-row">
           <div className="flex flex-col justify-between">
             <div className="flex h-8 items-center justify-start gap-4">
-            <NextLink href="/" passHref className="relative h-8 w-8" aria-label="Home page">
-  <img src="/captn-in-app.jpeg" alt="Home" className="absolute h-8 w-8 rounded-full" />
-</NextLink>
+              <NextLink href="/" passHref className="relative h-8 w-8" aria-label="Home page">
+                <img
+                  src="/captn-in-app.jpeg"
+                  alt="Home"
+                  className="absolute h-8 w-8 rounded-full"
+                />
+              </NextLink>
               <NextLink
                 href="/"
                 passHref
@@ -30,18 +39,10 @@ export default function Footer() {
                 />
               </NavbarLink>
               <NavbarLink href="https://linkedin.com/in/kevinseagraves" target="_blank">
-                <LinkedInLogoIcon
-                  width="24"
-                  height="24"
-                  aria-label="captn's linkedin"
-                />
+                <LinkedInLogoIcon width="24" height="24" aria-label="captn's linkedin" />
               </NavbarLink>
               <NavbarLink href="https://twitter.com/captnseagraves" target="_blank">
-                <TwitterLogoIcon
-                  width="24"
-                  height="24"
-                  aria-label="captn's twitter"
-                />
+                <TwitterLogoIcon width="24" height="24" aria-label="captn's twitter" />
               </NavbarLink>
             </div>
           </div>

@@ -2,9 +2,9 @@ import { useCallback } from 'react';
 import clsx from 'clsx';
 import { parseEther } from 'viem';
 import Button from '@/components/Button/Button';
-import { useBuyMeACoffeeContract } from '../_contracts/useBuyMeACoffeeContract';
+import { useBuyMyTimeContract } from '../_contracts/useBuyMyTimeContract';
 import useFields from '../_hooks/useFields';
-import useOnchainCoffeeMemos from '../_hooks/useOnchainCoffeeMemos';
+import useOnchainTimeMemos from '../_hooks/useOnchainTimeMemos';
 import ContractAlert from './ContractAlert';
 import InputText from './InputText';
 import Label from './Label';
@@ -13,7 +13,7 @@ import TransactionSteps from './TransactionSteps';
 import useSmartContractForms from './useSmartContractForms';
 
 const GAS_COST = 0.0001;
-const COFFEE_COUNT = [1, 2, 3, 4];
+const TIME_COUNT = [1, 2, 3, 4];
 
 const initFields = {
   name: '',
@@ -29,12 +29,12 @@ type Fields = {
   message: string;
 };
 
-type FormBuyCoffeeProps = {
-  refetchMemos: ReturnType<typeof useOnchainCoffeeMemos>['refetchMemos'];
+type FormBuyMyTimeProps = {
+  refetchMemos: ReturnType<typeof useOnchainTimeMemos>['refetchMemos'];
 };
 
-function FormBuyCoffee({ refetchMemos }: FormBuyCoffeeProps) {
-  const contract = useBuyMeACoffeeContract();
+function FormBuyCoffee({ refetchMemos }: FormBuyMyTimeProps) {
+  const contract = useBuyMyTimeContract();
 
   const { fields, setField, resetFields } = useFields<Fields>(initFields);
 
@@ -67,14 +67,14 @@ function FormBuyCoffee({ refetchMemos }: FormBuyCoffeeProps) {
   return (
     <>
       <h2 className="mb-5 w-full text-center text-2xl font-semibold text-white lg:text-left">
-        Buy Me a Coffee!
+        Buy My Time
       </h2>
       <form onSubmit={onSubmitTransaction} className="w-full">
         <div className="my-4 items-center lg:flex lg:gap-4">
-          <div className="text-center text-4xl lg:text-left">☕</div>
+          <div className="text-center text-4xl lg:text-left">🕒</div>
           <div className="mb-4 mt-2 text-center font-sans text-xl lg:my-0 lg:text-left">X</div>
           <div className="mx-auto flex max-w-[300px] gap-3 lg:max-w-max">
-            {COFFEE_COUNT.map((count) => (
+            {TIME_COUNT.map((count) => (
               <button
                 key={`num-coffee-btn-${count}`}
                 type="button"
@@ -137,7 +137,7 @@ function FormBuyCoffee({ refetchMemos }: FormBuyCoffeeProps) {
           <Button
             buttonContent={
               <>
-                Send {fields.coffeeCount} coffee{fields.coffeeCount > 1 ? 's' : null} for{' '}
+                Buy {fields.coffeeCount} time slot{fields.coffeeCount > 1 ? 's' : null} for{' '}
                 {String((GAS_COST * fields.coffeeCount).toFixed(4))} ETH
               </>
             }

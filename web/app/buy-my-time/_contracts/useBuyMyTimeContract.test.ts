@@ -1,12 +1,12 @@
 import { baseSepolia } from 'viem/chains';
-import BuyMeACoffeeABI from './BuyMeACoffeeABI';
-import { useBuyMeACoffeeContract } from './useBuyMeACoffeeContract';
+import BuyMyTimeABI from './BuyMyTimeABI';
+import { useBuyMyTimeContract } from './useBuyMyTimeContract';
 
-describe('useBuyMeACoffeeContract', () => {
+describe('useBuyMyTimeContract', () => {
   it('should return correct contract data', () => {
-    const contract = useBuyMeACoffeeContract();
+    const contract = useBuyMyTimeContract();
     expect(contract).toEqual({
-      abi: BuyMeACoffeeABI,
+      abi: BuyMyTimeABI,
       address: '0xcE0EBD0282e247553eb8fDdeE3281b5EC09ddD16',
       status: 'ready',
       supportedChains: [baseSepolia],

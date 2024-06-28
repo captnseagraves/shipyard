@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useReadContract } from 'wagmi';
 import { markStep } from '@/utils/analytics';
-import { useBuyMeACoffeeContract } from '../_contracts/useBuyMeACoffeeContract';
+import { useBuyMyTimeContract } from '../_contracts/useBuyMyTimeContract';
 import type { CoffeeMemo } from '../_components/types';
 
 /**
@@ -10,7 +10,7 @@ import type { CoffeeMemo } from '../_components/types';
  * @returns The memos and a function to refetch them.
  */
 function useOnchainCoffeeMemos() {
-  const contract = useBuyMeACoffeeContract();
+  const contract = useBuyMyTimeContract();
 
   markStep('useReadContract.refetchMemos');
   const contractReadResult = useReadContract({
