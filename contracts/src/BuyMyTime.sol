@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
 /**
  * @title Memos
  * @dev Memo struct
@@ -16,19 +19,22 @@ struct Memo {
  * @title BuyMyTime
  * @dev BuyMyTime contract to purchase an Time Slot NFT and Redeem that NFT for a link to my calendly
  */
-contract BuyMyTime {
-    address payable public owner;
+contract BuyMyTime is Ownable, ERC721{
+        /// @notice The nonce for the NFTs minted by this contract
+    uint256 private nftIdNonce;
 
     // This enables us to decouple ownership from the recipient address
     address payable public recipientAddress;
     uint256 public price;
     Memo[] public memos;
+    
 
     error InsufficientFunds();
     error InvalidArguments(string message);
-    error OnlyOwner();
+    error NotNftOwner();
 
     event BuyMyTimeEvent(address indexed buyer, uint256 price);
+    event RedeemTimeEvent(address nftOwner, uint256 nftId);
     event NewMemo(address indexed userAddress, uint256 time, uint256 numTimeSlots, string message);
 
     constructor() {
@@ -50,13 +56,6 @@ contract BuyMyTime {
             revert InsufficientFunds();
         }
 
-        (bool sent,) = recipientAddress.call{value: msg.value}("");
-        require(sent, "Failed to send Ether");
-
-        // Mint NFTs
-        // Send NFTs to msg.sender
-
-
         if (bytes(message).length == 0) {
             revert InvalidArguments("Invalid message");
         }
@@ -65,16 +64,32 @@ contract BuyMyTime {
             revert InvalidArguments("Input parameter exceeds max length");
         }
 
+        (bool sent,) = recipientAddress.call{value: msg.value}("");
+        require(sent, "Failed to send Ether");
+
+        // Mint NFTs and send to buyer
+        for (uint256 i = 0; i < numTimeSlots; i++) {
+            _safeMint(msg.sender, nftIdNonce);
+            emit BuyMyTimeEvent(msg.sender, msg.value, nftIdNonce);
+            nftIdNonce++;
+        } 
+
         memos.push(Memo(numTimeSlots, message, block.timestamp, msg.sender));
 
-        emit BuyMyTimeEvent(msg.sender, msg.value);
         emit NewMemo(msg.sender, block.timestamp, numTimeSlots, message);
     }
 
     function redeemTime(uint256 nftId) public {
         // check if msg.sender owns nftId
-        // burn NFT
-        // emit redeemTime event
+        if (_requireOwned(nftId) != msg.sender) {
+            revert NotNftOwner();
+        }
+
+        // Burn NFT
+        _burn(nftId);
+
+        // Emit redeemTime event
+        emit RedeemTimeEvent(msg.sender, nftId);
     }
 
     /**
@@ -82,20 +97,11 @@ contract BuyMyTime {
      * @notice Only callable by owner
      * @param  index The index of the memo
      */
-    function removeMemo(uint256 index) public {
+    function removeMemo(uint256 index) onlyOwner public {
         if (index >= memos.length) {
             revert InvalidArguments("Invalid index");
         }
 
-        if (msg.sender != owner) {
-            revert onlyOwner();
-        }
-
-        Memo memory memo = memos[index];
-
-        if (memo.userAddress != msg.sender || msg.sender != owner) {
-            revert InvalidArguments("Operation not allowed");
-        }
         Memo memory indexMemo = memos[index];
         memos[index] = memos[memos.length - 1];
         memos[memos.length - 1] = indexMemo;
@@ -105,11 +111,7 @@ contract BuyMyTime {
     /**
      * @dev Function to get the price of a timeslot
      */
-    function setPriceForTimeSlot(uint256 _price) public {
-        if (msg.sender != owner) {
-            revert OnlyOwner();
-        }
-
+    function setPriceForTimeSlot(uint256 _price) onlyOwner public {
         price = _price;
     }
 
