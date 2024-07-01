@@ -33,13 +33,17 @@ contract BuyMyTime is Ownable, ERC721{
     error InvalidArguments(string message);
     error NotNftOwner();
 
-    event BuyMyTimeEvent(address indexed buyer, uint256 price);
+    event BuyMyTimeEvent(address indexed buyer, uint256 price, uint256 nftId);
     event RedeemTimeEvent(address nftOwner, uint256 nftId);
     event NewMemo(address indexed userAddress, uint256 time, uint256 numTimeSlots, string message);
 
-    constructor() {
-        owner = payable(msg.sender);
-        price = 0.05 ether;
+    /***** CONSTRUCTOR *****/
+
+    constructor(string memory name, string memory symbol, address initialOwner) 
+        ERC721(name, symbol) 
+        Ownable(initialOwner)
+    {
+                price = 0.05 ether;
     }
 
     /**
