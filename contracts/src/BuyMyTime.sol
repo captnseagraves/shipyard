@@ -81,30 +81,31 @@ contract BuyMyTime is Ownable, ERC721 {
     /// @param numTimeSlots Number of time slots to purchase
     /// @param message A message or memo left by the buyer
     function buyMyTime(uint256 numTimeSlots, string calldata message) public payable {
+        // revert if msg.value is insufficient to pay for time slots
         if (msg.value < price * numTimeSlots) {
             revert InsufficientFunds();
         }
 
-        if (bytes(message).length == 0) {
-            revert InvalidArguments("Invalid message");
-        }
-
+        // revert if message exceeds ~1024 characters
         if (bytes(message).length > 1024) {
             revert InvalidArguments("Input parameter exceeds max length");
         }
 
+        // send eth to recipient address
         (bool sent,) = recipientAddress.call{value: msg.value}("");
         require(sent, "Failed to send Ether");
 
-        // Mint NFTs and send to buyer
+        // Mint NFTs, send to buyer, and emit event
         for (uint256 i = 0; i < numTimeSlots; i++) {
             _safeMint(msg.sender, nftIdNonce);
             emit BuyMyTimeEvent(msg.sender, msg.value, nftIdNonce);
             nftIdNonce++;
         }
-
+        
+        // add memo to storage
         memos.push(Memo(numTimeSlots, message, block.timestamp, msg.sender));
 
+        // emit new memo event
         emit NewMemo(msg.sender, block.timestamp, numTimeSlots, message);
     }
 
@@ -116,10 +117,10 @@ contract BuyMyTime is Ownable, ERC721 {
             revert NotNftOwner();
         }
 
-        // Burn NFT
+        // burn NFT
         _burn(nftId);
 
-        // Emit redeemTime event
+        // emit redeemTime event
         emit RedeemTimeEvent(msg.sender, nftId);
     }
 
@@ -130,29 +131,38 @@ contract BuyMyTime is Ownable, ERC721 {
     /// @param size Number of memos to retrieve
     /// @return slice A slice of the memos array
     function getMemos(uint256 index, uint256 size) public view returns (Memo[] memory) {
+        // if memos storage is empty return 0
         if (memos.length == 0) {
             return memos;
         }
 
+        // revert if index provided is beyond storage length
         if (index >= memos.length) {
             revert InvalidArguments("Invalid index");
         }
 
+        // revert if size is larger than 25
         if (size > 25) {
             revert InvalidArguments("size must be <= 25");
         }
 
+        // temporaily store size
         uint256 effectiveSize = size;
+
+        // adjust the size if it exceeds the array's bounds
         if (index + size > memos.length) {
-            // Adjust the size if it exceeds the array's bounds
             effectiveSize = memos.length - index;
         }
 
+        // instantiate slice
         Memo[] memory slice = new Memo[](effectiveSize);
+
+        // populate slice
         for (uint256 i = 0; i < effectiveSize; i++) {
             slice[i] = memos[index + i];
         }
 
+        // return slice
         return slice;
     }
 
