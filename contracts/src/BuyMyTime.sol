@@ -79,7 +79,7 @@ contract BuyMyTime is Ownable, ERC721 {
     /// @dev Mints new NFTs and stores the memos
     /// @param numTimeSlots Number of time slots to purchase
     /// @param message A message or memo left by the buyer
-    function buyMyTime(uint256 numTimeSlots, string calldata message) public payable {
+    function buyTime(uint256 numTimeSlots, string calldata message) public payable {
         // revert if msg.value is insufficient to pay for time slots
         if (msg.value < price * numTimeSlots) {
             revert InsufficientFunds();
