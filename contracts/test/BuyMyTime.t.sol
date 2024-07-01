@@ -4,6 +4,8 @@ pragma solidity ^0.8.23;
 import {Test, console2} from "forge-std/Test.sol";
 import {BuyMyTime, Memo} from "../src/BuyMyTime.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
 
 contract BuyMyTimeTest is Test {
     BuyMyTime public buyMyTime;
@@ -74,7 +76,10 @@ vm.startPrank(owner);
     }
 
     function testSetPriceForTimeSlot() public {
+        vm.startPrank(owner);
         buyMyTime.setPriceForTimeSlot(1 ether);
+        vm.stopPrank();
+
         buyMyTime.buyTime{value: 1 ether}(numTimeSlots, message);
         assertEq(buyMyTime.getMemos(0, 10).length, 1);
     }
