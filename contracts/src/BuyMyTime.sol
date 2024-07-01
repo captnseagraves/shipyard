@@ -4,57 +4,82 @@ pragma solidity ^0.8.23;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-/**
- * @title Memos
- * @dev Memo struct
- */
+//TODO should nftId by in Memo struct? 
+
+/// @title Struct for storing information about a purchased time slot
+/// @notice This struct is used to keep track of memos left by users when they purchase time slots
 struct Memo {
+    /// @notice The number of time slots purchased
     uint256 numTimeSlots;
+    /// @notice The message or memo left by the buyer
     string message;
+    /// @notice The timestamp when the memo was created
     uint256 time;
+    /// @notice The address of the user who created the memo
     address userAddress;
 }
 
-/**
- * @title BuyMyTime
- * @dev BuyMyTime contract to purchase an Time Slot NFT and Redeem that NFT for a link to my calendly
- */
-contract BuyMyTime is Ownable, ERC721{
-        /// @notice The nonce for the NFTs minted by this contract
+/// @title A contract for buying and redeeming time slots as NFTs
+/// @author captnseagraves
+/// @notice This contract allows users to buy time slots and redeem them later
+contract BuyMyTime is Ownable, ERC721 {
+    /// ***** STATE VARIABLES ***** ///
+
+    /// @notice The nonce for the NFTs minted by this contract
     uint256 private nftIdNonce;
 
-    // This enables us to decouple ownership from the recipient address
+    /// @notice Address where funds will be sent upon time slot purchase
+    /// @dev decouples contract ownership from funds recipient
     address payable public recipientAddress;
+
+    /// @notice Price per time slot
     uint256 public price;
+
+    /// @notice Array of memos left by buyers
     Memo[] public memos;
-    
 
-    error InsufficientFunds();
-    error InvalidArguments(string message);
-    error NotNftOwner();
+    /// ***** EVENTS ***** ///
 
+    /// @notice Event emitted when a time slot is purchased
     event BuyMyTimeEvent(address indexed buyer, uint256 price, uint256 nftId);
+
+    /// @notice Event emitted when a time slot is redeemed
     event RedeemTimeEvent(address nftOwner, uint256 nftId);
+
+    /// @notice Event emitted when a new memo is added
     event NewMemo(address indexed userAddress, uint256 time, uint256 numTimeSlots, string message);
 
-    /***** CONSTRUCTOR *****/
+    /// ***** ERRORS ***** ///
 
-    constructor(string memory name, string memory symbol, address initialOwner) 
-        ERC721(name, symbol) 
+    /// @notice Error thrown when the sent funds are insufficient
+    error InsufficientFunds();
+
+    /// @notice Error thrown when invalid arguments are provided
+    error InvalidArguments(string message);
+
+    /// @notice Error thrown when the caller is not the owner of the NFT
+    error NotNftOwner();
+
+    /// ***** CONSTRUCTOR ***** ///
+
+    /// @notice Initializes the contract with predefined name and symbol for the NFT and sets the initial owner
+    /// @param name Name of the NFT
+    /// @param symbol Symbol of the NFT
+    /// @param initialOwner Address of the initial owner
+    constructor(string memory name, string memory symbol, address initialOwner)
+        ERC721(name, symbol)
         Ownable(initialOwner)
     {
-                price = 0.05 ether;
+        // set the initial price of a time slot
+        price = 0.05 ether;
     }
 
-    /**
-     * WRITE FUNCTIONS *************
-     */
+    /// ***** EXTERNAL WRTIE FUNCTIONS ***** ///
 
-    /**
-     * @dev Function to buy a time slot
-     * @param  message The message of the user
-     * (Note: Using calldata for gas efficiency)
-     */
+    /// @notice Allows users to buy time slots and leave a memo
+    /// @dev Mints new NFTs and stores the memos
+    /// @param numTimeSlots Number of time slots to purchase
+    /// @param message A message or memo left by the buyer
     function buyMyTime(uint256 numTimeSlots, string calldata message) public payable {
         if (msg.value < price * numTimeSlots) {
             revert InsufficientFunds();
@@ -76,13 +101,15 @@ contract BuyMyTime is Ownable, ERC721{
             _safeMint(msg.sender, nftIdNonce);
             emit BuyMyTimeEvent(msg.sender, msg.value, nftIdNonce);
             nftIdNonce++;
-        } 
+        }
 
         memos.push(Memo(numTimeSlots, message, block.timestamp, msg.sender));
 
         emit NewMemo(msg.sender, block.timestamp, numTimeSlots, message);
     }
 
+    /// @notice Allows the owner of an NFT to redeem their time slot
+    /// @param nftId The ID of the NFT to redeem
     function redeemTime(uint256 nftId) public {
         // check if msg.sender owns nftId
         if (_requireOwned(nftId) != msg.sender) {
@@ -96,36 +123,12 @@ contract BuyMyTime is Ownable, ERC721{
         emit RedeemTimeEvent(msg.sender, nftId);
     }
 
-    /**
-     * @dev Function to remove a memo
-     * @notice Only callable by owner
-     * @param  index The index of the memo
-     */
-    function removeMemo(uint256 index) onlyOwner public {
-        if (index >= memos.length) {
-            revert InvalidArguments("Invalid index");
-        }
+    /// ***** EXTERNAL READ FUNCTIONS ***** ///
 
-        Memo memory indexMemo = memos[index];
-        memos[index] = memos[memos.length - 1];
-        memos[memos.length - 1] = indexMemo;
-        memos.pop();
-    }
-
-    /**
-     * @dev Function to get the price of a timeslot
-     */
-    function setPriceForTimeSlot(uint256 _price) onlyOwner public {
-        price = _price;
-    }
-
-    /**
-     * READ FUNCTIONS *************
-     */
-
-    /**
-     * @dev Function to get the memos
-     */
+    /// @notice Retrieves a slice of the memos array
+    /// @param index Index to start retrieving from
+    /// @param size Number of memos to retrieve
+    /// @return slice A slice of the memos array
     function getMemos(uint256 index, uint256 size) public view returns (Memo[] memory) {
         if (memos.length == 0) {
             return memos;
@@ -153,8 +156,41 @@ contract BuyMyTime is Ownable, ERC721{
         return slice;
     }
 
-    /**
-     * @dev Recieve function to accept ether
-     */
-    receive() external payable {}
+    /// ***** ADMIN WRITE FUNCTIONS ***** ///
+
+    /// @notice Allows the owner to remove a memo
+    /// @param index Index of the memo to remove
+    function removeMemo(uint256 index) public onlyOwner {
+        if (index >= memos.length) {
+            revert InvalidArguments("Invalid index");
+        }
+
+        Memo memory indexMemo = memos[index];
+        memos[index] = memos[memos.length - 1];
+        memos[memos.length - 1] = indexMemo;
+        memos.pop();
+    }
+
+    /// @notice Sets the price for a time slot
+    /// @param _price New price for a time slot
+    function setPriceForTimeSlot(uint256 _price) public onlyOwner {
+        price = _price;
+    }
+
+    /// ***** SECURITY BEST PRACTICE FUNCTIONS ***** ///
+
+    /// @notice Prevents the owner from renouncing ownership
+    function renounceOwnership() public view override onlyOwner {
+        revert("Ownership cannot be renounced");
+    }
+    /// @notice Reverts if the contract receives Ether with no data
+
+    receive() external payable {
+        revert("Contract cannot receive ETH");
+    }
+
+    /// @notice Reverts if the contract receives Ether with data or if no function matches the call
+    fallback() external payable {
+        revert("Contract cannot receive ETH");
+    }
 }
