@@ -4,7 +4,7 @@ pragma solidity ^0.8.23;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-//TODO should nftId by in Memo struct? 
+//TODO should nftId by in Memo struct?
 
 /// @title Struct for storing information about a purchased time slot
 /// @notice This struct is used to keep track of memos left by users when they purchase time slots
@@ -101,7 +101,7 @@ contract BuyMyTime is Ownable, ERC721 {
             emit BuyMyTimeEvent(msg.sender, msg.value, nftIdNonce);
             nftIdNonce++;
         }
-        
+
         // add memo to storage
         memos.push(Memo(numTimeSlots, message, block.timestamp, msg.sender));
 
@@ -175,9 +175,13 @@ contract BuyMyTime is Ownable, ERC721 {
             revert InvalidArguments("Invalid index");
         }
 
+        // instantiate memo from index
         Memo memory indexMemo = memos[index];
+        // move last memo value to index to be deleted
         memos[index] = memos[memos.length - 1];
+        // move memo value to be deleted to the last index
         memos[memos.length - 1] = indexMemo;
+        // remove last index value
         memos.pop();
     }
 
