@@ -4,10 +4,9 @@ pragma solidity ^0.8.23;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-//TODO should nftId by in Memo struct?
-
 /// @title Struct for storing information about a purchased time slot
 /// @notice This struct is used to keep track of memos left by users when they purchase time slots
+/// @dev Memos are stored per purchase, not per time slot, hence the numTimeSlots param
 struct Memo {
     /// @notice The number of time slots purchased
     uint256 numTimeSlots;
