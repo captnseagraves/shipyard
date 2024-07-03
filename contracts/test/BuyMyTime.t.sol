@@ -6,29 +6,41 @@ import {BuyMyTime, Memo} from "../src/BuyMyTime.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-
 contract BuyMyTimeTest is Test {
     BuyMyTime public buyMyTime;
     uint256 numTimeSlots = 1;
     string message = "message";
     address owner = 0x5Ad3b55625553CEf54D7561cD256658537d54AAd;
+    address buyer1 = vm.addr(0x2);
 
     function setUp() public {
         buyMyTime = new BuyMyTime("test", "TEST", owner);
+
+        // fund buyer wallet
+        payable(buyer1).transfer(1000 ether);
     }
 
     function testGetMemos() public {
+        vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, message);
+        vm.stopPrank();
+
         assertEq(buyMyTime.getMemos(0, 10).length, 1);
         Memo memory memo = buyMyTime.getMemos(0, 10)[0];
         assertEq(memo.message, message);
     }
 
     function testRemoveMemo() public {
+        vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, message);
+        vm.stopPrank();
         assertEq(buyMyTime.getMemos(0, 10).length, 1);
+
+        vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, "testMessage");
-vm.startPrank(owner);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
         buyMyTime.removeMemo(0);
         vm.stopPrank();
         assertEq(buyMyTime.getMemos(0, 10)[0].message, "testMessage");
@@ -37,7 +49,9 @@ vm.startPrank(owner);
     function testPaging() public {
         uint256 amtToAdd = 100;
         for (uint256 i = 0; i < amtToAdd; i++) {
+            vm.startPrank(buyer1);
             buyMyTime.buyTime{value: 0.05 ether}(1, Strings.toString(i));
+            vm.stopPrank();
         }
         for (uint256 i = 0; i < amtToAdd; i++) {
             Memo[] memory memos = buyMyTime.getMemos(i, 1);
@@ -56,11 +70,15 @@ vm.startPrank(owner);
 
     function testMaxMemoMessageSize() public {
         vm.expectRevert();
+        vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, generateLongString(1026));
+        vm.stopPrank();
     }
 
     function testMaxMemoAllSizesAtMaximumShouldAccept() public {
+        vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, generateLongString(1024));
+        vm.stopPrank();
     }
 
     function testEmptyMemoNoError() public {
@@ -69,7 +87,9 @@ vm.startPrank(owner);
     }
 
     function testInvalidIndexErrors() public {
+        vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, message);
+        vm.stopPrank();
 
         vm.expectRevert();
         Memo[] memory memos = buyMyTime.getMemos(15, 10);
@@ -80,7 +100,9 @@ vm.startPrank(owner);
         buyMyTime.setPriceForTimeSlot(1 ether);
         vm.stopPrank();
 
+        vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 1 ether}(numTimeSlots, message);
+        vm.stopPrank();
         assertEq(buyMyTime.getMemos(0, 10).length, 1);
     }
 
