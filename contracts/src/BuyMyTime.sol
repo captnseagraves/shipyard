@@ -40,7 +40,7 @@ contract BuyMyTime is Ownable, ERC721 {
     /// ***** EVENTS ***** ///
 
     /// @notice Event emitted when a time slot is purchased
-    event BuyMyTimeEvent(address indexed buyer, uint256 price, uint256 nftId);
+    event BuyTimeEvent(address indexed buyer, uint256 price, uint256 nftId);
 
     /// @notice Event emitted when a time slot is redeemed
     event RedeemTimeEvent(address nftOwner, uint256 nftId);
@@ -97,7 +97,7 @@ contract BuyMyTime is Ownable, ERC721 {
         // Mint NFTs, send to buyer, and emit event
         for (uint256 i = 0; i < numTimeSlots; i++) {
             _safeMint(msg.sender, nftIdNonce);
-            emit BuyMyTimeEvent(msg.sender, msg.value, nftIdNonce);
+            emit BuyTimeEvent(msg.sender, msg.value, nftIdNonce);
             nftIdNonce++;
         }
 
@@ -196,8 +196,8 @@ contract BuyMyTime is Ownable, ERC721 {
     function renounceOwnership() public view override onlyOwner {
         revert("Ownership cannot be renounced");
     }
-    /// @notice Reverts if the contract receives Ether with no data
 
+    /// @notice Reverts if the contract receives Ether with no data
     receive() external payable {
         revert("Contract cannot receive ETH");
     }

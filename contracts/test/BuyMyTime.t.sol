@@ -13,6 +13,11 @@ contract BuyMyTimeTest is Test {
     address owner = 0x5Ad3b55625553CEf54D7561cD256658537d54AAd;
     address buyer1 = vm.addr(0x2);
 
+        event BuyTimeEvent(address indexed buyer, uint256 price, uint256 nftId);
+    event RedeemTimeEvent(address nftOwner, uint256 nftId);
+    event NewMemo(address indexed userAddress, uint256 time, uint256 numTimeSlots, string message);
+
+
     function setUp() public {
         buyMyTime = new BuyMyTime("test", "TEST", owner);
 
@@ -20,15 +25,62 @@ contract BuyMyTimeTest is Test {
         payable(buyer1).transfer(1000 ether);
     }
 
-    function testGetMemos() public {
+    // testBuyTime_simple
+        // nftId owned by buyer1
+    function testBuyTime_simple() public {
+
         vm.startPrank(buyer1);
+        
+        vm.expectEmit(false, false, false, true);
+        emit BuyTimeEvent(address(buyer1), 0.05 ether, 0);
+
+        vm.expectEmit(false, false, false, true);
+        emit NewMemo(address(buyer1), block.timestamp, 1, message);
+
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, message);
+
         vm.stopPrank();
+
+        assertEq(buyMyTime.ownerOf(0), buyer1);
 
         assertEq(buyMyTime.getMemos(0, 10).length, 1);
         Memo memory memo = buyMyTime.getMemos(0, 10)[0];
         assertEq(memo.message, message);
     }
+    // testBuyTime_multipletimeSlots
+        // nftId owned by buyer1
+    // testBuyTime_revert_insufficientFunds
+    // testBuyTime_revert_messageLengthExceedsLimit
+    // testBuyTime_memoAccurate
+    // testBuyTime_eventCorrect
+
+    // testRedeemTime_simple
+        // nftId not owned by buyer1
+    // testRedeemTime_revert_notNftOwner
+    // testRedeemTime_eventCorrect
+
+
+
+    // testGetMemos_return0EmptyArray
+    // testGetMemos_revert_indexBeyondStorageLength
+    // testGetMemos_revert_sizeLargerThan25
+
+    // testRemoveMemo_simple
+    // testRemoveMemo_revert_notOwner
+
+    // testsetPriceForTimeSlot_simple
+    // testsetPriceForTimeSlot_revert_notOwner
+
+    // testRenounceOwnership_revert_ownershipCannotBeRenounced
+
+
+
+
+
+
+
+
+    
 
     function testRemoveMemo() public {
         vm.startPrank(buyer1);
