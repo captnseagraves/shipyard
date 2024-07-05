@@ -78,7 +78,7 @@ contract BuyMyTimeTest is Test {
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, generateLongString(1026));
         vm.stopPrank();
     }
-
+    // testBuyTime_maximumMessageLength
     function testMaxMemoAllSizesAtMaximumShouldAccept() public {
         vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, generateLongString(1024));
@@ -96,7 +96,23 @@ contract BuyMyTimeTest is Test {
     }
 
     // testRedeemTime_simple
-    // nftId not owned by buyer1
+        function testRedeemTime_simple() public {
+vm.startPrank(buyer1);
+        buyMyTime.buyTime{value: 0.05 ether}(1, message);
+
+        // testRedeemTime_eventCorrect
+        vm.expectEmit(false, false, false, true);
+        emit RedeemTimeEvent(address(buyer1), 0);
+
+        buyMyTime.redeemTime(0);
+
+        vm.stopPrank();
+
+        // should return nonexistent token
+        vm.expectRevert();
+        buyMyTime.ownerOf(0);
+
+    }
     // testRedeemTime_revert_notNftOwner
     // testRedeemTime_eventCorrect
 
