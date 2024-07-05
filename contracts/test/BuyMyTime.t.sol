@@ -12,6 +12,8 @@ contract BuyMyTimeTest is Test {
     string message = "message";
     address owner = vm.addr(0x1);
     address buyer1 = vm.addr(0x2);
+        address buyer2 = vm.addr(0x3);
+
 
     event BuyTimeEvent(address indexed buyer, uint256 price, uint256 nftId);
     event RedeemTimeEvent(address nftOwner, uint256 nftId);
@@ -48,8 +50,8 @@ contract BuyMyTimeTest is Test {
         assertEq(memo.message, message);
     }
 
-    // testBuyTime_multipletimeSlots
-    function testBuyTime_multipletimeSlots() public {
+    // testBuyTime_multipleTimeSlots
+    function testBuyTime_multipleTimeSlots() public {
         vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.25 ether}(5, message);
         vm.stopPrank();
@@ -78,6 +80,7 @@ contract BuyMyTimeTest is Test {
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, generateLongString(1026));
         vm.stopPrank();
     }
+
     // testBuyTime_maximumMessageLength
     function testMaxMemoAllSizesAtMaximumShouldAccept() public {
         vm.startPrank(buyer1);
@@ -96,8 +99,8 @@ contract BuyMyTimeTest is Test {
     }
 
     // testRedeemTime_simple
-        function testRedeemTime_simple() public {
-vm.startPrank(buyer1);
+    function testRedeemTime_simple() public {
+        vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.05 ether}(1, message);
 
         // testRedeemTime_eventCorrect
@@ -108,13 +111,23 @@ vm.startPrank(buyer1);
 
         vm.stopPrank();
 
-        // should return nonexistent token
+        // should revert with nonexistent token
         vm.expectRevert();
         buyMyTime.ownerOf(0);
-
     }
+
     // testRedeemTime_revert_notNftOwner
-    // testRedeemTime_eventCorrect
+function testRedeemTime_revert_notNftOwner() public {
+        vm.startPrank(buyer1);
+        buyMyTime.buyTime{value: 0.05 ether}(1, message);
+        vm.stopPrank();
+
+        vm.startPrank(buyer2);
+        vm.expectRevert();
+        buyMyTime.redeemTime(0);
+        vm.stopPrank();
+    }
+
 
     // testGetMemos_return0EmptyArray
     function testEmptyMemoNoError() public {
@@ -132,7 +145,19 @@ vm.startPrank(buyer1);
         Memo[] memory memos = buyMyTime.getMemos(15, 10);
     }
 
-    function testPaging() public {
+    
+    // testGetMemos_revert_sizeLargerThan25
+    function testGetMemos_revert_sizeLargerThan25() public {
+        vm.startPrank(buyer1);
+        buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, message);
+        vm.stopPrank();
+
+        vm.expectRevert();
+        Memo[] memory memos = buyMyTime.getMemos(15, 26);
+    }
+
+    // testGetMemos_paging
+    function testGetMemos_paging() public {
         uint256 amtToAdd = 100;
         for (uint256 i = 0; i < amtToAdd; i++) {
             vm.startPrank(buyer1);
@@ -145,10 +170,8 @@ vm.startPrank(buyer1);
         }
     }
 
-    // testGetMemos_revert_sizeLargerThan25
-
     // testRemoveMemo_simple
-    function testRemoveMemo() public {
+    function testRemoveMemo_simple() public {
         vm.startPrank(buyer1);
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, message);
         vm.stopPrank();
@@ -165,11 +188,52 @@ vm.startPrank(buyer1);
     }
 
     // testRemoveMemo_revert_notOwner
+    function testRemoveMemo_revert_notOwner() public {
+        vm.startPrank(buyer1);
+        buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, message);
+        vm.stopPrank();
+        assertEq(buyMyTime.getMemos(0, 10).length, 1);
+
+        vm.startPrank(buyer1);
+        buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, "testMessage");
+        vm.stopPrank();
+
+        vm.startPrank(buyer1);
+        vm.expectRevert();
+        buyMyTime.removeMemo(0);
+        vm.stopPrank();
+    }
 
     // testsetPriceForTimeSlot_simple
+    function testSetPriceForTimeSlot_simple() public {
+        vm.startPrank(owner);
+        buyMyTime.setPriceForTimeSlot(1 ether);
+        vm.stopPrank();
+
+        vm.startPrank(buyer1);
+        buyMyTime.buyTime{value: 1 ether}(numTimeSlots, message);
+        vm.stopPrank();
+
+        vm.startPrank(buyer1);
+        vm.expectRevert();
+        buyMyTime.buyTime{value: 0.5 ether}(numTimeSlots, message);
+        vm.stopPrank();
+    }
     // testsetPriceForTimeSlot_revert_notOwner
+function testsetPriceForTimeSlot_revert_notOwner() public {
+        vm.startPrank(buyer1);
+        vm.expectRevert();
+        buyMyTime.setPriceForTimeSlot(1 ether);
+        vm.stopPrank();
+    }
 
     // testRenounceOwnership_revert_ownershipCannotBeRenounced
+    function testRenounceOwnership_revert_ownershipCannotBeRenounced() public {
+        vm.startPrank(owner);
+        vm.expectRevert();
+        buyMyTime.renounceOwnership();
+        vm.stopPrank();
+    }
 
     /**
      * @dev Recieve function to accept ether
