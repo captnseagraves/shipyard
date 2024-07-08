@@ -71,6 +71,9 @@ contract BuyMyTime is Ownable, ERC721 {
     {
         // set the initial price of a time slot
         price = 0.05 ether;
+
+        // set initial recipient address
+        recipientAddress = payable(initialOwner);
     }
 
     /// ***** EXTERNAL WRTIE FUNCTIONS ***** ///
