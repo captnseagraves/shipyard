@@ -26,7 +26,7 @@ contract BuyMyTimeTest is Test {
     }
 
     // testGetMemos_return0EmptyArray
-    function testGetMemos_return0EmptyArray() view public {
+    function testGetMemos_return0EmptyArray() public view {
         Memo[] memory memos = buyMyTime.getMemos(15, 0);
         assertEq(memos.length, 0);
     }

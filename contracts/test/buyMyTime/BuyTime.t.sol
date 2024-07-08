@@ -35,7 +35,7 @@ contract BuyMyTimeTest is Test {
         vm.expectEmit(false, false, false, true);
         emit NewMemo(address(buyer1), block.timestamp, 1, message);
 
-         uint256 balanceBefore = address(owner).balance;
+        uint256 balanceBefore = address(owner).balance;
 
         buyMyTime.buyTime{value: 0.05 ether}(numTimeSlots, message);
 
@@ -45,11 +45,11 @@ contract BuyMyTimeTest is Test {
         assertEq(buyMyTime.ownerOf(0), buyer1);
 
         // eth balance of owner updated
-         uint256 balanceAfter = address(owner).balance;
+        uint256 balanceAfter = address(owner).balance;
 
-         console2.log(balanceAfter);
+        console2.log(balanceAfter);
 
-         assertEq(balanceAfter, balanceBefore + (numTimeSlots * 0.05 ether));
+        assertEq(balanceAfter, balanceBefore + (numTimeSlots * 0.05 ether));
 
         // testBuyTime_memoAccurate
         assertEq(buyMyTime.getMemos(0, 10).length, 1);
