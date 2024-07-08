@@ -7,7 +7,7 @@ import ContractAlert from './ContractAlert';
 import TransactionSteps from './TransactionSteps';
 import useSmartContractForms from './useSmartContractForms';
 
-const GAS_COST = 0.0001;
+const GAS_COST = 0.05;
 
 const initFields = {
   name: '',
@@ -60,11 +60,7 @@ function FormBuyCoffee() {
       </h2>
       <form onSubmit={onSubmitTransaction} className="w-full">
         <ContractAlert contract={contract} amount={GAS_COST} />
-        <Button
-          buttonContent={<>Redeem Time NFT for {String(GAS_COST.toFixed(4))} ETH</>}
-          type="submit"
-          disabled={disabled}
-        />
+        <Button buttonContent={<>Redeem Time NFT</>} type="submit" disabled={disabled} />
       </form>
     </>
   );

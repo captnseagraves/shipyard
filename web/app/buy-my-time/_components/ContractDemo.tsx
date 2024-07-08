@@ -35,7 +35,7 @@ export default function BuyMyTimeContractDemo() {
         >
           <FormBuyMyTime refetchMemos={refetchMemos} />
         </div>
-      </section>        
+      </section>
       <aside>
         <h2 className="mb-5 w-fit text-2xl font-semibold text-white">Previous purchases</h2>
 

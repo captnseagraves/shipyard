@@ -9,7 +9,7 @@ export const useBuyMyTimeContract = generateContractHook({
   abi: BuyMyTimeABI,
   [baseSepolia.id]: {
     chain: baseSepolia,
-    address: '0xcE0EBD0282e247553eb8fDdeE3281b5EC09ddD16',
+    address: '0x1feE3dd0Dd2B9Ca3B9dc81c1eC6d46661809dae3',
   },
 
   // ... more chains for this contract go here

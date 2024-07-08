@@ -12,20 +12,20 @@ import TextArea from './TextArea';
 import TransactionSteps from './TransactionSteps';
 import useSmartContractForms from './useSmartContractForms';
 
-const GAS_COST = 0.0001;
+const GAS_COST = 0.05;
 const TIME_COUNT = [1, 2, 3, 4];
 
 const initFields = {
   name: '',
   twitterHandle: '',
   message: '',
-  coffeeCount: 1,
+  numTimeSlots: 1,
 };
 
 type Fields = {
   name: string;
   twitterHandle: string;
-  coffeeCount: number;
+  numTimeSlots: number;
   message: string;
 };
 
@@ -45,10 +45,10 @@ function FormBuyCoffee({ refetchMemos }: FormBuyMyTimeProps) {
 
   const { disabled, transactionState, resetContractForms, onSubmitTransaction } =
     useSmartContractForms({
-      gasFee: parseEther(String(GAS_COST * fields.coffeeCount)),
+      gasFee: parseEther(String(GAS_COST * fields.numTimeSlots)),
       contract,
-      name: 'buyCoffee',
-      arguments: [fields.coffeeCount, fields.name, fields.twitterHandle, fields.message],
+      name: 'buyTime',
+      arguments: [fields.numTimeSlots, fields.message],
       enableSubmit: fields.name !== '' && fields.message !== '',
       reset,
     });
@@ -57,7 +57,7 @@ function FormBuyCoffee({ refetchMemos }: FormBuyMyTimeProps) {
     return (
       <TransactionSteps
         transactionStep={transactionState}
-        coffeeCount={fields.coffeeCount}
+        numTimeSlots={fields.numTimeSlots}
         resetContractForms={resetContractForms}
         gasCost={GAS_COST}
       />
@@ -80,13 +80,13 @@ function FormBuyCoffee({ refetchMemos }: FormBuyMyTimeProps) {
                 type="button"
                 className={clsx(
                   `${
-                    fields.coffeeCount === count
+                    fields.numTimeSlots === count
                       ? 'bg-gradient-2'
                       : 'border border-boat-color-orange'
                   } block h-[40px] w-full rounded lg:w-[40px]`,
                 )}
                 // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
-                onClick={() => setField('coffeeCount', count)}
+                onClick={() => setField('numTimeSlots', count)}
               >
                 {count}
               </button>
@@ -137,8 +137,8 @@ function FormBuyCoffee({ refetchMemos }: FormBuyMyTimeProps) {
           <Button
             buttonContent={
               <>
-                Buy {fields.coffeeCount} time slot{fields.coffeeCount > 1 ? 's' : null} for{' '}
-                {String((GAS_COST * fields.coffeeCount).toFixed(4))} ETH
+                Buy {fields.numTimeSlots} time slot{fields.numTimeSlots > 1 ? 's' : null} for{' '}
+                {String(GAS_COST * fields.numTimeSlots)} ETH
               </>
             }
             type="submit"

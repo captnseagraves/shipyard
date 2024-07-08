@@ -7,7 +7,7 @@ describe('useBuyMyTimeContract', () => {
     const contract = useBuyMyTimeContract();
     expect(contract).toEqual({
       abi: BuyMyTimeABI,
-      address: '0xcE0EBD0282e247553eb8fDdeE3281b5EC09ddD16',
+      address: '0x1feE3dd0Dd2B9Ca3B9dc81c1eC6d46661809dae3',
       status: 'ready',
       supportedChains: [baseSepolia],
     });
