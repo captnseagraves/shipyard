@@ -7,7 +7,7 @@ import Header from '@/components/layout/header/Header';
  * Use the page component to wrap the components
  * that you want to render on the page.
  */
-export default function HomePage() {
+export default function MyWhy() {
   const account = useAccount();
 
   return (

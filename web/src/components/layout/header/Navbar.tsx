@@ -79,21 +79,12 @@ function Navbar() {
               </NavbarLink>
             </li>
             <li className="flex">
-              <NavbarLink href="/#get-started">Personal Manifesto</NavbarLink>
-            </li>
-            <li className="flex">
-              <NavbarLink href="/#get-started">Current Investment Thesis</NavbarLink>
-            </li>
-            <li className="flex">
-              <NavbarLink href="/buy-my-time">Buy My Time</NavbarLink>
-            </li>
-            <li className="flex">
               <NavigationMenu.Root className="relative">
                 <NavigationMenu.List className={clsx('flex flex-row space-x-2')}>
                   <NavigationMenu.Item>
                     <NavigationMenu.Trigger className="group flex h-16 items-center justify-start gap-1">
                       <span className="font-robotoMono text-center text-base font-normal text-white">
-                        Experiences
+                        Explore
                       </span>
                       <ChevronDownIcon
                         className="transform transition duration-200 ease-in-out group-data-[state=open]:rotate-180"
