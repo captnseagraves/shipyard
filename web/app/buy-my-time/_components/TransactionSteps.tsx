@@ -19,8 +19,8 @@ export default function TransactionSteps({
   if (transactionStep === TransactionStates.START) {
     return (
       <TransactionStep
-        status="Coffee brewing..."
-        icon="☕"
+        status="Reserving Time Slot..."
+        icon="🕑"
         helpText="Please confirm transaction in your wallet"
       >
         <Button
