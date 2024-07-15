@@ -2,14 +2,14 @@ import { useMemo } from 'react';
 import { useReadContract } from 'wagmi';
 import { markStep } from '@/utils/analytics';
 import { useBuyMyTimeContract } from '../_contracts/useBuyMyTimeContract';
-import type { CoffeeMemo } from '../_components/types';
+import type { TimeSlotMemo } from '../_components/types';
 
 /**
  * Hooks is abstracting away the logic of calling a read-only function on a contract.
  * offers a refetch function to refetch the data.
  * @returns The memos and a function to refetch them.
  */
-function useOnchainCoffeeMemos() {
+function useOnchainTimeSlotMemos() {
   const contract = useBuyMyTimeContract();
 
   markStep('useReadContract.refetchMemos');
@@ -24,11 +24,11 @@ function useOnchainCoffeeMemos() {
   return useMemo(
     () => ({
       memos:
-        contractReadResult.status === 'success' ? (contractReadResult.data as CoffeeMemo[]) : [],
+        contractReadResult.status === 'success' ? (contractReadResult.data as TimeSlotMemo[]) : [],
       refetchMemos: contractReadResult.refetch,
     }),
     [contractReadResult],
   );
 }
 
-export default useOnchainCoffeeMemos;
+export default useOnchainTimeSlotMemos;

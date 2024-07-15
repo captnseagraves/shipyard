@@ -1,10 +1,8 @@
 import type { Address } from 'viem';
 
-export type CoffeeMemo = {
-  numCoffees: bigint;
-  userName: string;
+export type TimeSlotMemo = {
+  numTimeSlots: bigint;
   message: string;
-  userAddress: Address;
   time: bigint;
-  twitterHandle?: string;
+  userAddress?: string;
 };

@@ -33,7 +33,7 @@ type FormBuyMyTimeProps = {
   refetchMemos: ReturnType<typeof useOnchainTimeMemos>['refetchMemos'];
 };
 
-function FormBuyCoffee({ refetchMemos }: FormBuyMyTimeProps) {
+function FormBuyMyTime({ refetchMemos }: FormBuyMyTimeProps) {
   const contract = useBuyMyTimeContract();
 
   const { fields, setField, resetFields } = useFields<Fields>(initFields);
@@ -150,4 +150,4 @@ function FormBuyCoffee({ refetchMemos }: FormBuyMyTimeProps) {
   );
 }
 
-export default FormBuyCoffee;
+export default FormBuyMyTime;

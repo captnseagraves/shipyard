@@ -35,11 +35,11 @@ export default function TransactionSteps({
   if (transactionStep === TransactionStates.COMPLETE) {
     return (
       <TransactionStep
-        status={`You bought ${numTimeSlots} coffee${numTimeSlots > 1 ? 's' : ''}!`}
+        status={`You bought ${numTimeSlots} time slot${numTimeSlots > 1 ? 's' : ''}!`}
         icon="🎁"
         helpText="Thank you for supporting this endeavor!"
       >
-        <Button buttonContent="Send another coffee" onClick={resetContractForms} />
+        <Button buttonContent="Buy another time slot" onClick={resetContractForms} />
       </TransactionStep>
     );
   }
@@ -51,7 +51,7 @@ export default function TransactionSteps({
         icon="⛽"
         helpText={`Please fund your wallet with at least ${String(
           gasCost,
-        )} ETH and try sending a coffee again.`}
+        )} ETH and try buying a time slot again.`}
       >
         <Button buttonContent="Got it" onClick={resetContractForms} />
       </TransactionStep>
