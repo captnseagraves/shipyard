@@ -52,6 +52,13 @@ The assumption would be that wallets would only need to read from the Smart key 
 However if there is a key added or rotated on the canonical chain, the external chains need to be able to query and update the key. 
 This external functional should be callable by anyone willing to pay the fee to update the owner key. The only way to update the key is via the smart key management system which references the canonical ownership contract on the canonical chain. 
 Thus validators are paid per query they respond to, and users only pay for the queries they make when updating they keys. 
+What is a fee that makes sense for validators to provide capital and computation to? 
+What is the equilibrium where it makes economic sense to run validators and also economic sense to use the system and pay the fee? 
+Variables are:	
+Amount of fee
+Number of queries
+Number of validators to split the fees
+You could enable the user to select the number of validators they require for quorum and thus how much security they need for their response and how much they would need to pay. 
 
 Concerns:
 This could hold billions worth of value in the future and needs to be extremely secure. 
